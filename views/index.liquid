@@ -1,1 +1,37 @@
-<h1>hmm zal dit werken???</h1>
+<!DOCTYPE html>
+<html lang="en">
+        
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Pokédex</title>
+        <link rel="stylesheet" href="/style.css" />
+    </head>
+
+
+    <body>
+        <!-- Sidebar en navigatie -->
+        <nav>
+            <img src="/assets/pokemon-logo.png" alt="Pokémon" class="logo" />
+            <h1>All Pokémon</h1>
+
+            <!-- Zoekbalk -->
+            <input type="text" placeholder="Search" disabled />
+
+            <!-- Navigatie links -->
+            <a href="/" class="nav-link nav-link--active">All Pokémon</a>
+            <a href="/favourites" class="nav-link">Caught Pokémon</a>
+        </nav>
+
+        <!-- Grid van kaartjes -->
+        <main>
+            {% for p in pokemon %}
+            <a href="/pokemon/{{ p.id }}" class="card type-{{ p.types[0] }}">
+                <span class="card__name">{{ p.name }}</span>
+                <img src="{{ p.image }}" alt="{{ p.name }}" />
+            </a>
+            {% endfor %}
+        </main>
+
+    </body>
+</html>

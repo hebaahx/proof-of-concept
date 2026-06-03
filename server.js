@@ -28,7 +28,7 @@ app.get('/', async (req, res) => {
       return {
         id: detail.id,
         name: detail.name,
-        image: detail.sprites.other['official-artwork'].front_default,
+        image: detail.sprites.front_default,
         types: detail.types.map((t) => t.type.name), 
       }
     })
