@@ -58,9 +58,43 @@ app.get('/search', async (req, res) => {
   try {
 
     // Haal de zoekterm op uit de URL
-    const query = req.query.search
+    const query = req.query.search.toLowerCase().trim()
 
-    // Zoek de pokémon op via naam in de PokeAPI
+    // Lijst van alle bekende types
+    const allTypes = ['fire', 'water', 'grass', 'electric', 'psychic', 
+                      'normal', 'fighting', 'poison', 'ghost', 'dragon',
+                      'bug', 'flying', 'rock', 'ice', 'steel', 
+                      'ground', 'dark', 'fairy']
+     let pokemonList = []
+
+    if (allTypes.includes(query)) {
+
+      // Zoeken op type pokemon
+      const typeResponse = await fetch(`${pokeApi}/type/${query}`)
+      const typeData = await typeResponse.json()
+
+      // Haal de eerste 20 pokémon van dat type op
+      const first20 = typeData.pokemon.slice(0, 20)
+
+      pokemonList = await Promise.all(
+        first20.map(async (item) => {
+
+          const detailResponse = await fetch(item.pokemon.url)
+          const detailData = await detailResponse.json()
+
+          return {
+            id: detailData.id,
+            name: detailData.name,
+            image: detailData.sprites.other['official-artwork'].front_default 
+                   ?? detailData.sprites.front_default,
+            types: detailData.types.map((type) => type.type.name),
+          }
+        })
+      )
+
+    } else {                  
+
+    // Zoek de pokémon op via NAAM in de PokeAPI
     const searchResponse = await fetch(`${pokeApi}/pokemon/${query.toLowerCase()}`)
 
     // Als de pokémon niet bestaat geeft de API een 404 terug
@@ -69,17 +103,19 @@ app.get('/search', async (req, res) => {
         pokemonList: [], 
         error: `No Pokémon found with the name "${query}"` 
       })
+     }
+
+      const detailData = await searchResponse.json()
+
+      // Maak er één kaartje van, die lijkt op homepage
+      const pokemonList = [{
+        id: detailData.id,
+        name: detailData.name,
+        image: detailData.sprites.other['official-artwork'].front_default ?? detailData.sprites.front_default,
+        types: detailData.types.map((type) => type.type.name),
+      }]
+
     }
-
-    const detailData = await searchResponse.json()
-
-    // Maak er één kaartje van, die lijkt op homepage
-    const pokemonList = [{
-      id: detailData.id,
-      name: detailData.name,
-      image: detailData.sprites.other['official-artwork'].front_default ?? detailData.sprites.front_default,
-      types: detailData.types.map((type) => type.type.name),
-    }]
 
     // Render dezelfde homepage template met het resultaat
     res.render('index', { pokemonList })
