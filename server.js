@@ -14,7 +14,7 @@ app.set('view engine', 'liquid') // Vertel Express dat .liquid de standaard exte
 const pokeApi = 'https://pokeapi.co/api/v2'
 
 
-// Homepage route 
+// ------------Homepage route ---------------
 app.get('/', async (req, res) => {
 
     try {
@@ -51,6 +51,44 @@ app.get('/', async (req, res) => {
    }
 })
 
+
+// ------------Search---------------
+
+app.get('/search', async (req, res) => {
+  try {
+
+    // Haal de zoekterm op uit de URL
+    const query = req.query.search
+
+    // Zoek de pokémon op via naam in de PokeAPI
+    const searchResponse = await fetch(`${pokeApi}/pokemon/${query.toLowerCase()}`)
+
+    // Als de pokémon niet bestaat geeft de API een 404 terug
+    if (!searchResponse.ok) {
+      return res.render('index', { 
+        pokemonList: [], 
+        error: `No Pokémon found with the name "${query}"` 
+      })
+    }
+
+    const detailData = await searchResponse.json()
+
+    // Maak er één kaartje van, die lijkt op homepage
+    const pokemonList = [{
+      id: detailData.id,
+      name: detailData.name,
+      image: detailData.sprites.other['official-artwork'].front_default ?? detailData.sprites.front_default,
+      types: detailData.types.map((type) => type.type.name),
+    }]
+
+    // Render dezelfde homepage template met het resultaat
+    res.render('index', { pokemonList })
+
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Something went wrong')
+  }
+})
 
 // Stel het poortnummer in waar Express op moet gaan luisteren
 // Lokaal is dit poort 8000; als deze applicatie ergens gehost wordt, waarschijnlijk poort 80

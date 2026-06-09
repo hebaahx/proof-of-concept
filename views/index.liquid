@@ -39,6 +39,10 @@
             
             <h1>All Pokémon</h1>
 
+            {% if error %}
+                <p class="error">{{ error }}</p>
+            {% endif %}
+
             <ul class="pokemon-list">
                 {% for pokemon in pokemonList %}
                 <li class="pokemon-list__item">

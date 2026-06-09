@@ -69,6 +69,15 @@ nav {
       font-size: 0.9rem;
     }
 
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+
     button {
       padding: 10px 16px;
       border-radius: 20px;
@@ -145,6 +154,11 @@ main {
     align-self: center;
     margin-top: 4px;
   }
+}
+
+.error {
+  color: red;
+  margin-bottom: 12px;
 }
 
 /* Type kleuren */
