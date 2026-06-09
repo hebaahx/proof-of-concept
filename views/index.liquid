@@ -10,27 +10,50 @@
 
 
     <body>
+
+        <header>
+            <img src="/assets/pokemon-logo.png" alt="Pokémon logo" class="logo">
+        </header>    
+
         <!-- Sidebar en navigatie -->
         <nav>
-            <img src="/assets/pokemon-logo.png" alt="Pokémon" class="logo" />
-            <h1>All Pokémon</h1>
+           <form action="/search" method="GET"> 
+                <label for="search" class="sr-only">Search Pokémon</label>
+                <input type="search" id="search" name="search" placeholder="Search Pokémon">
+                <button type="submit">Search</button>
+            </form>    
+           
+            <ul class="nav__list">
+                <li>
+                    <a href="/" class="nav__link nav__link--active" aria-current="page">All Pokémon</a>
+                </li>
+                <li>
+                    <a href="/favourites" class="nav__link">Caught Pokémon</a>
+                </li>
+            </ul>
 
-            <!-- Zoekbalk -->
-            <input type="text" placeholder="Search" disabled />
-
-            <!-- Navigatie links -->
-            <a href="/" class="nav-link nav-link--active">All Pokémon</a>
-            <a href="/favourites" class="nav-link">Caught Pokémon</a>
         </nav>
 
-        <!-- Grid van kaartjes -->
-        <main>
-            {% for p in pokemon %}
-            <a href="/pokemon/{{ p.id }}" class="card type-{{ p.types[0] }}">
-                <span class="card__name">{{ p.name }}</span>
-                <img src="{{ p.image }}" alt="{{ p.name }}" />
-            </a>
-            {% endfor %}
+
+        <main id="main-content">
+            
+            <h1>All Pokémon</h1>
+
+            <ul class="pokemon-list">
+                {% for pokemon in pokemonList %}
+                <li class="pokemon-list__item">
+                    <a href="/pokemon/{{ pokemon.id }}" class="card type-{{ pokemon.types[0] }}">
+                    <span class="card__name">{{ pokemon.name | capitalize }}</span>
+                    <img
+                        src="{{ pokemon.image }}"
+                        alt="{{ pokemon.name | capitalize }}"
+                        class="card__image"
+                        loading="lazy"
+                    />
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
         </main>
 
     </body>

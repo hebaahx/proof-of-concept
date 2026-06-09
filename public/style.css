@@ -1,4 +1,4 @@
-/*  kleuren */
+/* Variabelen*/
 :root {
   --type-grass:    #c6e8b3;
   --type-fire:     #ffd5c2;
@@ -10,6 +10,14 @@
   --type-poison:   #e8c8ff;
   --type-ghost:    #c8c0e8;
   --type-dragon:   #c3b8ff;
+  --type-bug:      #d9f0b8;
+  --type-flying:   #d6ecff;
+  --type-rock:     #d9d0b8;
+  --type-ice:      #c8f0f8;
+  --type-steel:    #d0d8e0;
+  --type-ground:   #f5e2c0;
+  --type-dark:     #c4bab5;
+  --type-fairy:    #ffd6ec;
 
   --purple:     #6c5ce7;
   --background: #f5f5f5;
@@ -18,14 +26,14 @@
   --white:      #ffffff;
 }
 
-
+/* Reset */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-
+/* Pagina */
 body {
   font-family: sans-serif;
   background: var(--background);
@@ -33,58 +41,90 @@ body {
   padding: 20px;
 }
 
-/*  Navigatie */
-nav {
-    text-align: center;
+/* Header */
+header {
+  text-align: center;
+  margin-bottom: 16px;
 
   .logo {
-    width: 200px;
-    margin-bottom: auto;
-    background-image: none;
+    width: 150px;
   }
+}
 
-  h1 {
-    font-size: 1.4rem;
-    font-weight: 800;
-    margin-bottom: 8px;
-  }
+/* Navigatie  */
+nav {
+  margin-bottom: 16px;
 
-  input {
-    width: 100%;
-    padding: 10px 14px;
-    border-radius: 20px;
-    border: none;
-    background: #ebebeb;
-    font-size: 0.9rem;
+  form {
+    display: flex;
+    gap: 8px;
     margin-bottom: 12px;
+
+    input {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: 20px;
+      border: none;
+      background: #ebebeb;
+      font-size: 0.9rem;
+    }
+
+    button {
+      padding: 10px 16px;
+      border-radius: 20px;
+      border: none;
+      background: var(--purple);
+      color: var(--white);
+      font-weight: 700;
+      cursor: pointer;
+    }
   }
 
-  .nav-link {
+  .nav__list {
+    list-style: none;
+    padding: 0;
+
+    li {
+      margin-bottom: 6px;
+    }
+  }
+
+  .nav__link {
     display: block;
     padding: 10px 16px;
     border-radius: 12px;
     text-decoration: none;
     font-weight: 700;
     color: var(--text-muted);
-    margin-bottom: 6px;
   }
 
-  .nav-link--active {
+  .nav__link--active {
     background: var(--purple);
     color: var(--white);
-    }
+  }
 }
 
-/* Grid */
+/* Main */
 main {
+  h1 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 16px;
+  }
+}
+
+/* Pokemon grid */
+.pokemon-list {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  margin-top: 20px;
+  list-style: none;
+  padding: 0;
 }
 
 /* Kaartje */
 .card {
+  background: #e8e8e8; /* fallback als type niet bekend is */
   border-radius: 16px;
   padding: 12px;
   text-decoration: none;
@@ -93,21 +133,21 @@ main {
   flex-direction: column;
   overflow: hidden;
 
-  &__name {
+  .card__name {
     font-size: 0.85rem;
     font-weight: 700;
     text-transform: capitalize;
     margin-bottom: 4px;
   }
 
-  img {
+  .card__image {
     width: 90px;
     align-self: center;
     margin-top: 4px;
   }
 }
 
-/* Type kleuren  */
+/* Type kleuren */
 .type-grass    { background: var(--type-grass); }
 .type-fire     { background: var(--type-fire); }
 .type-water    { background: var(--type-water); }
@@ -118,3 +158,11 @@ main {
 .type-poison   { background: var(--type-poison); }
 .type-ghost    { background: var(--type-ghost); }
 .type-dragon   { background: var(--type-dragon); }
+.type-bug      { background: var(--type-bug); }
+.type-flying   { background: var(--type-flying); }
+.type-rock     { background: var(--type-rock); }
+.type-ice      { background: var(--type-ice); }
+.type-steel    { background: var(--type-steel); }
+.type-ground   { background: var(--type-ground); }
+.type-dark     { background: var(--type-dark); }
+.type-fairy    { background: var(--type-fairy); }
