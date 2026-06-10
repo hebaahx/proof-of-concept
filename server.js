@@ -12,6 +12,7 @@ app.set('view engine', 'liquid') // Vertel Express dat .liquid de standaard exte
 
 // De basis URL van de PokeAPI
 const pokeApi = 'https://pokeapi.co/api/v2'
+const limit = 20
 
 
 // ------------Homepage route en zoeken ---------------
@@ -34,11 +35,10 @@ app.get('/', async (req, res) => {
       const typeResponse = await fetch(`${pokeApi}/type/${query}`)
       const typeData = await typeResponse.json()
 
-      // Haal de eerste 20 pokémon van dat type op
-      const first20 = typeData.pokemon.slice(0, 20)
+      const pokemonByType = typeData.pokemon.slice(0, limit)
 
       pokemonList = await Promise.all(
-        first20.map(async (item) => {
+        pokemonByType.map(async (item) => {
 
           const detailResponse = await fetch(item.pokemon.url)
           const detailData = await detailResponse.json()
@@ -80,7 +80,7 @@ app.get('/', async (req, res) => {
 
 
       // Stap 1: Haal een lijst van 20 Pokémon op van de PokeAPI
-      const listResponse = await fetch(`${pokeApi}/pokemon?limit=20`)
+      const listResponse = await fetch(`${pokeApi}/pokemon?limit=${limit}`)
       const listData = await listResponse.json()
 
       // Stap 2: Voor elke Pokémon halen we de detailpagina op
