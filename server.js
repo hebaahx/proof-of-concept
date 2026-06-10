@@ -14,6 +14,18 @@ app.set('view engine', 'liquid') // Vertel Express dat .liquid de standaard exte
 const pokeApi = 'https://pokeapi.co/api/v2'
 const limit = 20
 
+async function getPokemonDetails(url) {
+  const detailResponse = await fetch(url)
+  const detailData = await detailResponse.json()
+
+  return {
+    id: detailData.id,
+    name: detailData.name,
+    image: detailData.sprites.other['official-artwork'].front_default
+      ?? detailData.sprites.front_default,
+    types: detailData.types.map((type) => type.type.name),
+  }
+}
 
 // ------------Homepage route en zoeken ---------------
 app.get('/', async (req, res) => {
@@ -38,20 +50,9 @@ app.get('/', async (req, res) => {
       const pokemonByType = typeData.pokemon.slice(0, limit)
 
       pokemonList = await Promise.all(
-        pokemonByType.map(async (item) => {
-
-          const detailResponse = await fetch(item.pokemon.url)
-          const detailData = await detailResponse.json()
-
-          return {
-            id: detailData.id,
-            name: detailData.name,
-            image: detailData.sprites.other['official-artwork'].front_default
-              ?? detailData.sprites.front_default,
-            types: detailData.types.map((type) => type.type.name),
-          }
-        })
+        pokemonByType.map(async (item) => getPokemonDetails(item.pokemon.url))
       )
+
 
     } else if (query) {
 
@@ -66,15 +67,7 @@ app.get('/', async (req, res) => {
         })
       }
 
-      const detailData = await searchResponse.json()
-
-      // Maak er één kaartje van, die lijkt op homepage
-      pokemonList = [{
-        id: detailData.id,
-        name: detailData.name,
-        image: detailData.sprites.other['official-artwork'].front_default ?? detailData.sprites.front_default,
-        types: detailData.types.map((type) => type.type.name),
-      }]
+      pokemonList = [await getPokemonDetails(`${pokeApi}/pokemon/${query}`)]
 
     } else {
 
@@ -83,23 +76,8 @@ app.get('/', async (req, res) => {
       const listResponse = await fetch(`${pokeApi}/pokemon?limit=${limit}`)
       const listData = await listResponse.json()
 
-      // Stap 2: Voor elke Pokémon halen we de detailpagina op
       pokemonList = await Promise.all(
-        listData.results.map(async (pokemon) => {
-
-          const detailResponse = await fetch(pokemon.url)
-          const detailData = await detailResponse.json()
-
-
-          // Stap 3: Geef alleen de velden terug die we nodig hebben op de homepage
-          return {
-            id: detailData.id,
-            name: detailData.name,
-            image: detailData.sprites.other['official-artwork'].front_default
-              ?? detailData.sprites.front_default,
-            types: detailData.types.map((type) => type.type.name),
-          }
-        })
+        listData.results.map((pokemon) => getPokemonDetails(pokemon.url))
       )
     }
 
