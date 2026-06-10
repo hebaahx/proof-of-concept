@@ -14,51 +14,12 @@ app.set('view engine', 'liquid') // Vertel Express dat .liquid de standaard exte
 const pokeApi = 'https://pokeapi.co/api/v2'
 
 
-// ------------Homepage route ---------------
+// ------------Homepage route en zoeken ---------------
 app.get('/', async (req, res) => {
 
   try {
 
-    // Stap 1: Haal een lijst van 20 Pokémon op van de PokeAPI
-    const listResponse = await fetch(`${pokeApi}/pokemon?limit=20`)
-    const listData = await listResponse.json()
-
-    // Stap 2: Voor elke Pokémon halen we de detailpagina op
-    const pokemonList = await Promise.all(
-      listData.results.map(async (pokemon) => {
-
-        const detailResponse = await fetch(pokemon.url)
-        const detailData = await detailResponse.json()
-
-
-        // Stap 3: Geef alleen de velden terug die we nodig hebben op de homepage
-        return {
-          id: detailData.id,
-          name: detailData.name,
-          image: detailData.sprites.other['official-artwork'].front_default
-            ?? detailData.sprites.front_default,
-          types: detailData.types.map((type) => type.type.name),
-        }
-      })
-    )
-
-    // Stap 4: Render de homepage template en geef de pokémon data mee
-    res.render('index', { pokemonList })
-
-  } catch (error) {
-    console.error(error)
-    res.status(500).send('something went wrong')
-  }
-})
-
-
-// ------------Search---------------
-
-app.get('/search', async (req, res) => {
-  try {
-
-    // Haal de zoekterm op uit de URL
-    const query = req.query.search.toLowerCase().trim()
+    const query = req.query.search?.toLowerCase().trim()
 
     // Lijst van alle bekende types
     const allTypes = ['fire', 'water', 'grass', 'electric', 'psychic',
@@ -92,10 +53,10 @@ app.get('/search', async (req, res) => {
         })
       )
 
-    } else {
+    } else if (query) {
 
       // Zoek de pokémon op via NAAM in de PokeAPI
-      const searchResponse = await fetch(`${pokeApi}/pokemon/${query.toLowerCase()}`)
+      const searchResponse = await fetch(`${pokeApi}/pokemon/${query}`)
 
       // Als de pokémon niet bestaat geeft de API een 404 terug
       if (!searchResponse.ok) {
@@ -108,23 +69,49 @@ app.get('/search', async (req, res) => {
       const detailData = await searchResponse.json()
 
       // Maak er één kaartje van, die lijkt op homepage
-      const pokemonList = [{
+      pokemonList = [{
         id: detailData.id,
         name: detailData.name,
         image: detailData.sprites.other['official-artwork'].front_default ?? detailData.sprites.front_default,
         types: detailData.types.map((type) => type.type.name),
       }]
 
+    } else {
+
+
+      // Stap 1: Haal een lijst van 20 Pokémon op van de PokeAPI
+      const listResponse = await fetch(`${pokeApi}/pokemon?limit=20`)
+      const listData = await listResponse.json()
+
+      // Stap 2: Voor elke Pokémon halen we de detailpagina op
+      pokemonList = await Promise.all(
+        listData.results.map(async (pokemon) => {
+
+          const detailResponse = await fetch(pokemon.url)
+          const detailData = await detailResponse.json()
+
+
+          // Stap 3: Geef alleen de velden terug die we nodig hebben op de homepage
+          return {
+            id: detailData.id,
+            name: detailData.name,
+            image: detailData.sprites.other['official-artwork'].front_default
+              ?? detailData.sprites.front_default,
+            types: detailData.types.map((type) => type.type.name),
+          }
+        })
+      )
     }
 
-    // Render dezelfde homepage template met het resultaat
+    // Stap 4: Render de homepage template en geef de pokémon data mee
     res.render('index', { pokemonList })
 
   } catch (error) {
     console.error(error)
-    res.status(500).send('Something went wrong')
+    res.status(500).send('something went wrong')
   }
 })
+
 
 // Stel het poortnummer in waar Express op moet gaan luisteren
 // Lokaal is dit poort 8000; als deze applicatie ergens gehost wordt, waarschijnlijk poort 80
