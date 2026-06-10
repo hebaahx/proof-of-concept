@@ -2,7 +2,7 @@ import express from 'express'
 import { Liquid } from 'liquidjs';
 
 const app = express()
-app.use(express.urlencoded({extended: true}))
+app.use(express.urlencoded({ extended: true }))
 app.use(express.static('public'))
 
 const engine = new Liquid()
@@ -17,38 +17,38 @@ const pokeApi = 'https://pokeapi.co/api/v2'
 // ------------Homepage route ---------------
 app.get('/', async (req, res) => {
 
-    try {
- 
+  try {
+
     // Stap 1: Haal een lijst van 20 Pokémon op van de PokeAPI
     const listResponse = await fetch(`${pokeApi}/pokemon?limit=20`)
     const listData = await listResponse.json()
 
     // Stap 2: Voor elke Pokémon halen we de detailpagina op
     const pokemonList = await Promise.all(
-            listData.results.map(async (pokemon) => {
+      listData.results.map(async (pokemon) => {
 
-            const detailResponse = await fetch(pokemon.url)
-            const detailData = await detailResponse.json()
+        const detailResponse = await fetch(pokemon.url)
+        const detailData = await detailResponse.json()
 
 
-    // Stap 3: Geef alleen de velden terug die we nodig hebben op de homepage
-      return {
-        id: detailData.id,
-        name: detailData.name,
-        image: detailData.sprites.other['official-artwork'].front_default 
-              ?? detailData.sprites.front_default,
-        types: detailData.types.map((type) => type.type.name), 
-      }
-    })
-  )  
+        // Stap 3: Geef alleen de velden terug die we nodig hebben op de homepage
+        return {
+          id: detailData.id,
+          name: detailData.name,
+          image: detailData.sprites.other['official-artwork'].front_default
+            ?? detailData.sprites.front_default,
+          types: detailData.types.map((type) => type.type.name),
+        }
+      })
+    )
 
-// Stap 4: Render de homepage template en geef de pokémon data mee
-  res.render('index', { pokemonList })
+    // Stap 4: Render de homepage template en geef de pokémon data mee
+    res.render('index', { pokemonList })
 
-} catch (error) {
+  } catch (error) {
     console.error(error)
     res.status(500).send('something went wrong')
-   }
+  }
 })
 
 
@@ -61,11 +61,11 @@ app.get('/search', async (req, res) => {
     const query = req.query.search.toLowerCase().trim()
 
     // Lijst van alle bekende types
-    const allTypes = ['fire', 'water', 'grass', 'electric', 'psychic', 
-                      'normal', 'fighting', 'poison', 'ghost', 'dragon',
-                      'bug', 'flying', 'rock', 'ice', 'steel', 
-                      'ground', 'dark', 'fairy']
-     let pokemonList = []
+    const allTypes = ['fire', 'water', 'grass', 'electric', 'psychic',
+      'normal', 'fighting', 'poison', 'ghost', 'dragon',
+      'bug', 'flying', 'rock', 'ice', 'steel',
+      'ground', 'dark', 'fairy']
+    let pokemonList = []
 
     if (allTypes.includes(query)) {
 
@@ -85,25 +85,25 @@ app.get('/search', async (req, res) => {
           return {
             id: detailData.id,
             name: detailData.name,
-            image: detailData.sprites.other['official-artwork'].front_default 
-                   ?? detailData.sprites.front_default,
+            image: detailData.sprites.other['official-artwork'].front_default
+              ?? detailData.sprites.front_default,
             types: detailData.types.map((type) => type.type.name),
           }
         })
       )
 
-    } else {                  
+    } else {
 
-    // Zoek de pokémon op via NAAM in de PokeAPI
-    const searchResponse = await fetch(`${pokeApi}/pokemon/${query.toLowerCase()}`)
+      // Zoek de pokémon op via NAAM in de PokeAPI
+      const searchResponse = await fetch(`${pokeApi}/pokemon/${query.toLowerCase()}`)
 
-    // Als de pokémon niet bestaat geeft de API een 404 terug
-    if (!searchResponse.ok) {
-      return res.render('index', { 
-        pokemonList: [], 
-        error: `No Pokémon found with the name "${query}"` 
-      })
-     }
+      // Als de pokémon niet bestaat geeft de API een 404 terug
+      if (!searchResponse.ok) {
+        return res.render('index', {
+          pokemonList: [],
+          error: `No Pokémon found with the name "${query}"`
+        })
+      }
 
       const detailData = await searchResponse.json()
 
@@ -133,5 +133,5 @@ app.set('port', process.env.PORT || 8000)
 // Start Express op, gebruik daarbij het zojuist ingestelde poortnummer op
 app.listen(app.get('port'), function () {
   // Toon een bericht in de console
-   console.log(`Application started on http://localhost:${app.get('port')}`)
+  console.log(`Application started on http://localhost:${app.get('port')}`)
 })
