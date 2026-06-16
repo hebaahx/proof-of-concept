@@ -14,6 +14,11 @@ app.set('view engine', 'liquid') // Vertel Express dat .liquid de standaard exte
 const pokeApi = 'https://pokeapi.co/api/v2'
 const limit = 20
 
+// mijn user_id is 5
+const userId = 5
+const directusApi = 'https://fdnd-agency.directus.app/items'
+
+
 // ------------Functie voor basis info op hompage ---------------
 async function getPokemonDetails(url) {
   const detailResponse = await fetch(url)
@@ -89,17 +94,25 @@ async function getPokemonFullDetails(id) {
   }
 }
 
+// ── Functie om alle catches van deze user op te halen ────
+// Gebruikt op homepage, detailpagina en caught pagina — DRY
+async function getUserCatches() {
+  const catchesResponse = await fetch(`${directusApi}/pokemon_catches?filter[user_id][_eq]=${userId}`)
+  const catchesData = await catchesResponse.json()
+  return catchesData.data
+}
+
 // ------------Homepage route en zoeken ---------------
 app.get('/', async (req, res) => {
 
   try {
 
     const query = req.query.search?.toLowerCase().trim()
+    const showCaughtOnly = req.query.caught === 'true'
 
     // Haal alle catches van deze user op, zodat we weten welke pokemon gevangen zijn
-    const catchesResponse = await fetch(`${directusApi}/pokemon_catches?filter[user_id][_eq]=${userId}`)
-    const catchesData = await catchesResponse.json()
-    const caughtIds = catchesData.data.map((catchEntry) => catchEntry.pokemon_id)
+    const catches = await getUserCatches()
+    const caughtIds = catches.map((catchEntry) => catchEntry.pokemon_id)
 
     // Lijst van alle bekende types
     const allTypes = ['fire', 'water', 'grass', 'electric', 'psychic',
@@ -108,12 +121,17 @@ app.get('/', async (req, res) => {
       'ground', 'dark', 'fairy']
     let pokemonList = []
 
-    if (allTypes.includes(query)) {
+    if (showCaughtOnly) {
+
+      pokemonList = await Promise.all(
+        catches.map((catchEntry) => getPokemonDetails(`${pokeApi}/pokemon/${catchEntry.pokemon_id}`))
+      )
+
+    } else if (allTypes.includes(query)) {
 
       // Zoeken op type pokemon
       const typeResponse = await fetch(`${pokeApi}/type/${query}`)
       const typeData = await typeResponse.json()
-
       const pokemonByType = typeData.pokemon.slice(0, limit)
 
       pokemonList = await Promise.all(
@@ -172,29 +190,23 @@ app.get('/pokemon/:id', async (req, res) => {
     // Haal alle details van de pokemon op
     const pokemon = await getPokemonFullDetails(req.params.id)
 
-    // Check of deze pokemon al gevangen is door deze user
-    const catchesResponse = await fetch(`${directusApi}/pokemon_catches?filter[user_id][_eq]=${userId}`)
-    const catchesData = await catchesResponse.json()
-
     // Zoek de catch entry waarvan het pokemon_id overeenkomt
-    const existingCatch = catchesData.data.find(
+    const catches = await getUserCatches()
+    const existingCatch = catchesfind(
       (catchEntry) => catchEntry.pokemon_id == pokemon.id
     )
 
 
-    res.render('detail', { pokemon,
+    res.render('detail', {
+      pokemon,
       catchId: existingCatch ? existingCatch.id : null
-     })
+    })
 
   } catch (error) {
     console.error(error)
     res.status(404).render('404')
   }
 })
-
-// mijn user_id is 5
-const userId = 5
-const directusApi = 'https://fdnd-agency.directus.app/items'
 
 // ── Catch een Pokémon (POST) ─────────────────────────────
 app.post('/catch/:id', async (req, res) => {
