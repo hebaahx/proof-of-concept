@@ -8,8 +8,186 @@
 </head>
 
 <body>
-    <h1>hi??</h1>
 
+  <header>
+    <a href="/">
+      <img
+        src="/assets/pokemon-logo.png"
+        alt="Pokédex homepage"
+        class="logo"
+      >
+    </a>
+  </header>
+
+  <main id="main-content">
+
+    <nav aria-label="Back navigation">
+      <a href="/" class="back-link">
+        ⬅ Back to all Pokémon
+      </a>
+    </nav>
+
+    <article>
+
+      <header class="pokemon-hero type-{{ pokemon.types[0] }}">
+
+        <p class="pokemon-hero__id">
+          #{{ pokemon.id }}
+        </p>
+
+        <h1 class="pokemon-hero__name">
+          {{ pokemon.name | capitalize }}
+        </h1>
+
+        <ul class="type-list">
+            {% for type in pokemon.types %}
+              <li class="type-badge type-{{ type }}">
+                {{ type | capitalize }}
+              </li>
+            {% endfor %}
+        </ul>
+
+        <img
+          src="{{ pokemon.image }}"
+          alt="{{ pokemon.name | capitalize }}"
+          class="pokemon-hero__image"
+        >
+
+      </header>
+
+      <section aria-labelledby="about-heading" class="detail-section">
+
+        <h2 id="about-heading">
+          About
+        </h2>
+
+        <table class="info-table">
+
+          <caption class="sr-only">
+            Information about {{ pokemon.name }}
+          </caption>
+
+          <tbody>
+
+            <tr>
+              <th scope="row">Name</th>
+              <td>{{ pokemon.name | capitalize }}</td>
+            </tr>
+
+            <tr>
+              <th scope="row">ID</th>
+              <td>{{ pokemon.id }}</td>
+            </tr>
+
+            <tr>
+              <th scope="row">Base XP</th>
+              <td>{{ pokemon.baseXp }}</td>
+            </tr>
+
+            <tr>
+              <th scope="row">Weight</th>
+              <td>{{ pokemon.weight }}</td>
+            </tr>
+
+            <tr>
+              <th scope="row">Height</th>
+              <td>{{ pokemon.height }}</td>
+            </tr>
+
+            <tr>
+              <th scope="row">Abilities</th>
+              <td>{{ pokemon.abilities }}</td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </section>
+
+      <section aria-labelledby="stats-heading" class="detail-section">
+
+        <h2 id="stats-heading">
+          Stats
+        </h2>
+
+        <ul class="stats-list">
+
+          {% for stat in pokemon.stats %}
+
+          <li class="stat-row">
+
+            <span class="stat-row__name">
+              {{ stat.name | replace: '-', ' ' | capitalize }}
+            </span>
+
+            <progress
+              value="{{ stat.value }}"
+              max="100"
+            >
+              {{ stat.value }}
+            </progress>
+
+            <span class="stat-row__value">
+              {{ stat.value }}
+            </span>
+
+          </li>
+
+          {% endfor %}
+
+        </ul>
+
+      </section>
+
+      <section aria-labelledby="evolution-heading" class="detail-section">
+
+        <h2 id="evolution-heading">
+          Evolutions
+        </h2>
+
+        <ul class="evolution-list">
+
+          {% for evolution in pokemon.evolutions %}
+
+          <li>
+
+            <a
+              href="/pokemon/{{ evolution.id }}"
+              class="evolution-card {% if evolution.name == pokemon.name %}evolution-card--active{% endif %}"
+            >
+
+              <img
+                src="{{ evolution.image }}"
+                alt="{{ evolution.name | capitalize }}"
+                class="evolution-card__image"
+              >
+
+              <div>
+
+                <span class="evolution-card__id">
+                  #{{ evolution.id }}
+                </span>
+
+                <p class="evolution-card__name">
+                  {{ evolution.name | capitalize }}
+                </p>
+
+              </div>
+
+            </a>
+
+          </li>
+
+          {% endfor %}
+
+        </ul>
+
+      </section>
+
+    </article>
+
+  </main>
 
 </body>
 </html>
