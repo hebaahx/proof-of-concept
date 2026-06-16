@@ -150,7 +150,7 @@
 
           {% for evolution in pokemon.evolutions %}
 
-          <li>
+          <li class="evolution-wrapper">
 
             <a
               href="/pokemon/{{ evolution.id }}"
@@ -162,23 +162,7 @@
                 alt="{{ evolution.name | capitalize }}"
                 class="evolution-card__image"
               >
-              
-          {% if catchId %}
-            <form action="/uncatch/{{ catchId }}" method="POST">
-              <button type="submit" class="pokeball-btn" aria-label="Release this Pokémon">
-                <img src="/assets/pokeball.svg" alt="" class="pokeball-icon" />
-              </button>
-            </form>
-          {% else %}
-            <form action="/catch/{{ pokemon.id }}" method="POST">
-              <button type="submit" class="pokeball-btn" aria-label="Catch this Pokémon">
-                <img src="/assets/pokeball.svg" alt="" class="pokeball-icon" />
-              </button>
-            </form>
-          {% endif %}
-
               <div>
-
                 <span class="evolution-card__id">
                   #{{ evolution.id }}
                 </span>
@@ -186,10 +170,22 @@
                 <p class="evolution-card__name">
                   {{ evolution.name | capitalize }}
                 </p>
-
               </div>
-
-            </a>
+            </a>  
+              
+            {% if catchId %}
+              <form action="/uncatch/{{ catchId }}" method="POST">
+                <button type="submit" class="pokeball-btn" aria-label="Release this Pokémon">
+                  <img src="/assets/pokeball.svg" alt="" class="pokeball-icon" />
+                </button>
+              </form>
+            {% else %}
+              <form action="/catch/{{ pokemon.id }}" method="POST">
+                <button type="submit" class="pokeball-btn" aria-label="Catch this Pokémon">
+                  <img src="/assets/pokeball.svg" alt="" class="pokeball-icon" />
+                </button>
+              </form>
+            {% endif %}
 
           </li>
 

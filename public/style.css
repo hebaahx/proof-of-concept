@@ -339,6 +339,10 @@ article {
 }
 
 /* Evolutions */
+.evolution-wrapper {
+  position: relative;
+}
+
 .evolution-list {
   list-style: none;
   padding: 0;
@@ -410,6 +414,10 @@ article {
 }
 
 .pokeball-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
   border: none;
   background: none;
   cursor: pointer;
