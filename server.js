@@ -161,12 +161,71 @@ app.get('/pokemon/:id', async (req, res) => {
     // Haal alle details van de pokemon op
     const pokemon = await getPokemonFullDetails(req.params.id)
 
+    // Check of deze pokemon al gevangen is door deze user
+    const catchesResponse = await fetch(`${directusApi}/pokemon_catches?filter[user_id][_eq]=${userId}`)
+    const catchesData = await catchesResponse.json()
 
-    res.render('detail', { pokemon })
+    // Zoek de catch entry waarvan het pokemon_id overeenkomt
+    const existingCatch = catchesData.data.find(
+      (catchEntry) => catchEntry.pokemon_id == pokemon.id
+    )
+
+
+    res.render('detail', { pokemon,
+      catchId: existingCatch ? existingCatch.id : null
+     })
 
   } catch (error) {
     console.error(error)
     res.status(404).render('404')
+  }
+})
+
+// mijn user_id is 5
+const userId = 5
+const directusApi = 'https://fdnd-agency.directus.app/items'
+
+// ── Catch een Pokémon (POST) ─────────────────────────────
+app.post('/catch/:id', async (req, res) => {
+  try {
+
+    const pokemonId = req.params.id
+
+    await fetch(`${directusApi}/pokemon_catches`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        pokemon_id: pokemonId
+      })
+    })
+
+    // Stuur de gebruiker terug naar waar hij vandaan kwam
+    res.redirect(req.headers.referer || '/')
+
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Something went wrong')
+  }
+})
+
+// ── Uncatch een Pokémon DELETE via POST ──
+app.post('/uncatch/:catchId', async (req, res) => {
+  try {
+
+    const catchId = req.params.catchId
+
+    await fetch(`${directusApi}/pokemon_catches/${catchId}`, {
+      method: 'DELETE'
+    })
+
+    res.redirect(req.headers.referer || '/')
+
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Something went wrong')
   }
 })
 
