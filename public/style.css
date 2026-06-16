@@ -400,6 +400,18 @@ article {
   text-transform: capitalize;
 }
 
+.pokeball-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.pokeball-icon {
+  width: 28px;
+  height: 28px;
+}
+
 .error {
   color: red;
   margin-bottom: 12px;
