@@ -96,6 +96,11 @@ app.get('/', async (req, res) => {
 
     const query = req.query.search?.toLowerCase().trim()
 
+    // Haal alle catches van deze user op, zodat we weten welke pokemon gevangen zijn
+    const catchesResponse = await fetch(`${directusApi}/pokemon_catches?filter[user_id][_eq]=${userId}`)
+    const catchesData = await catchesResponse.json()
+    const caughtIds = catchesData.data.map((catchEntry) => catchEntry.pokemon_id)
+
     // Lijst van alle bekende types
     const allTypes = ['fire', 'water', 'grass', 'electric', 'psychic',
       'normal', 'fighting', 'poison', 'ghost', 'dragon',
@@ -145,6 +150,12 @@ app.get('/', async (req, res) => {
         listData.results.map((pokemon) => getPokemonDetails(pokemon.url))
       )
     }
+
+    // Voeg isCaught toe aan elke pokemon voordat je rendert
+    pokemonList = pokemonList.map((pokemon) => ({
+      ...pokemon,
+      isCaught: caughtIds.includes(pokemon.id)
+    }))
 
     res.render('index', { pokemonList })
 

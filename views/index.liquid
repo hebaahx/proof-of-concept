@@ -47,6 +47,9 @@
                 {% for pokemon in pokemonList %}
                 <li class="pokemon-list__item">
                     <a href="/pokemon/{{ pokemon.id }}" class="card type-{{ pokemon.types[0] }}">
+                        {% if pokemon.isCaught %}
+                            <img src="/assets/pokeball.svg" alt="Caught" class="card__pokeball" />
+                        {% endif %}
                     <span class="card__name">{{ pokemon.name | capitalize }}</span>
                     <img
                         src="{{ pokemon.image }}"
