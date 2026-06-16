@@ -422,6 +422,24 @@ article {
   background: none;
   cursor: pointer;
   padding: 4px;
+
+  &:active {
+    animation: catchShake 1s ease;
+  }
+}
+
+@keyframes catchShake {
+  0% {
+    transform: translateY(-50%) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-50%) rotate(15deg);
+  }
+
+  100% {
+    transform: translateY(-50%) rotate(0deg);
+  }
 }
 
 .pokeball-icon {
