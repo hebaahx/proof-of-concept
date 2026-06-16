@@ -175,7 +175,7 @@ app.get('/', async (req, res) => {
       isCaught: caughtIds.includes(pokemon.id)
     }))
 
-    res.render('index', { pokemonList })
+    res.render('index', { pokemonList, isCaughtPage: showCaughtOnly })
 
   } catch (error) {
     console.error(error)
@@ -192,7 +192,7 @@ app.get('/pokemon/:id', async (req, res) => {
 
     // Zoek de catch entry waarvan het pokemon_id overeenkomt
     const catches = await getUserCatches()
-    const existingCatch = catchesfind(
+    const existingCatch = catches.find(
       (catchEntry) => catchEntry.pokemon_id == pokemon.id
     )
 

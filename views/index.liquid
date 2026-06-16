@@ -28,7 +28,7 @@
                     <a href="/" class="nav__link nav__link--active" aria-current="page">All Pokémon</a>
                 </li>
                 <li>
-                    <a href="/favourites" class="nav__link"{% if isCaughtPage %}nav__link--active{% endif %}">Caught Pokémon</a>
+                    <a href="/?caught=true" class="nav__link {% if isCaughtPage %}nav__link--active{% endif %}">Caught Pokémon</a>
                 </li>
             </ul>
 
