@@ -46,7 +46,7 @@ body {
 }
 
 /* Header */
-header {
+.site-header {
   text-align: center;
   margin-bottom: 0px;
   padding: 12px 0;
@@ -88,8 +88,7 @@ nav {
       background: #ebebeb;
       font-size: 0.9rem;
     }
-
-  }
+}
 
 .logo-link {
   display: block;
@@ -132,6 +131,15 @@ nav {
     padding: 24px 16px;
     border-right: 1px solid #ebebeb;
     margin-bottom: 0;
+     
+  }
+}
+
+.back-nav {
+  margin-bottom: 16px;
+
+  @media (min-width: 768px) {
+    display: none;
   }
 }
 
@@ -213,6 +221,13 @@ main {
 article {
   max-width: 40rem;
   margin-inline: auto;
+
+  @media (min-width: 768px) {
+    max-width: 60rem;
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+  }
 }
 
 .back-link {
@@ -228,6 +243,14 @@ article {
   padding: 24px;
   text-align: center;
   margin-bottom: 1rem;
+
+  @media (min-width: 768px) {
+    width: 280px;
+    min-width: 280px;
+    margin-bottom: 0;
+    position: sticky;
+    top: 24px;
+  }
 
   /* &__id {
     display: inline-block;
@@ -252,6 +275,22 @@ article {
   } --------werkt niet?*/
 }
 
+.pokemon-hero__logo-link {
+  display: none;
+}
+
+.pokemon-hero__logo {
+  width: 140px;
+  display: block;
+  margin: 0 auto 16px;
+}
+
+@media (min-width: 768px) {
+  .pokemon-hero__logo-link {
+    display: block;
+  }
+}
+
  .pokemon-hero__id {
   display: inline-block;
   background: var(--purple);
@@ -273,6 +312,15 @@ article {
   display: block;
   margin-inline: auto;
 } 
+
+.detail-panel {
+  @media (min-width: 768px) {
+    flex: 1;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 24px;
+  }
+}
 
 .type-list {
   display: flex;
