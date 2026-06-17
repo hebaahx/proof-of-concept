@@ -16,9 +16,14 @@ Een webapplicatie waarmee je Pokémon kan bekijken, zoeken en vangen, gebouwd me
 
 ## Beschrijving
 Deze Pokédex is een webapplicatie waarmee gebruikers door een overzicht van Pokémon kunnen bladeren, op naam of type kunnen zoeken, en gevangen Pokémon kunnen opslaan in hun eigen "Caught Pokémon" lijst. De data komt live van de officiële PokeAPI, en de gevangen Pokémon worden opgeslagen via een Directus database.
-<img width="249" height="374" alt="image" src="https://github.com/user-attachments/assets/2db2128a-717e-4807-954c-c6362f9fdcb3" />
 
-Dit is een live link waar je de pokedex kan bekijken:proof-of-concept-lpgf.onrender.com
+
+
+<img width="249" height="374" alt="image" src="https://github.com/user-attachments/assets/2db2128a-717e-4807-954c-c6362f9fdcb3" />
+<img width="251" height="374" alt="image" src="https://github.com/user-attachments/assets/261af01a-68ad-489d-93e0-2eb1c2682bfe" />
+
+
+Dit is een live link waar je de pokedex kan bekijken: https://proof-of-concept-lpgf.onrender.com/
 
 ## Gebruik
 **User story:**
