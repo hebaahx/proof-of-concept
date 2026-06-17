@@ -9,65 +9,68 @@
     </head>
 
 
-    <body>
-
-        <header>
-            <img src="/assets/pokemon-logo.png" alt="Pokémon logo" class="logo">
-        </header>    
+    <body>  
 
         <!-- Sidebar en navigatie -->
-        <nav>
-           <form action="/" method="GET"> 
-                <label for="search" class="sr-only">Search Pokémon</label>
-                <input type="search" id="search" name="search" placeholder="Find a Pokémon by name or type...">
-                <button type="submit">Search</button>
-            </form>    
-           
-            <ul class="nav__list">
-                <li>
-                    <a href="/"
-                        class="nav__link {% unless isCaughtPage %}nav__link--active{% endunless %}">
-                        All Pokémon
-                    </a>
-                </li>
-                <li>
-                    <a href="/?caught=true"
-                        class="nav__link {% if isCaughtPage %}nav__link--active{% endif %}">
-                        Caught Pokémon
-                    </a>
-                </li>
-            </ul>
+       
+        <div class="layout">
+            <nav>
+                <a href="/" class="logo-link">
+                    <img src="/assets/pokemon-logo.png" alt="Pokédex homepage" class="logo">
+                </a>
 
-        </nav>
-
-
-        <main id="main-content">
+                <form action="/" method="GET"> 
+                    <label for="search" class="sr-only">Search Pokémon</label>
+                    <input type="search" id="search" name="search" placeholder="Find a Pokémon by name or type...">
+                    <button type="submit" class="sr-only">Search</button>
+                </form>    
             
-            <h1>All Pokémon</h1>
+                <ul class="nav__list">
+                    <li>
+                        <a href="/"
+                            class="nav__link {% unless isCaughtPage %}nav__link--active{% endunless %}">
+                            All Pokémon
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/?caught=true"
+                            class="nav__link {% if isCaughtPage %}nav__link--active{% endif %}">
+                            Caught Pokémon
+                        </a>
+                    </li>
+                </ul>
 
-            {% if error %}
-                <p class="error">{{ error }}</p>
-            {% endif %}
+            </nav>
 
-            <ul class="pokemon-list">
-                {% for pokemon in pokemonList %}
-                <li class="pokemon-list__item">
-                    <a href="/pokemon/{{ pokemon.id }}" class="card type-{{ pokemon.types[0] }}">
-                        {% if pokemon.isCaught %}
-                            <img src="/assets/pokeball.svg" alt="Caught" class="card__pokeball" />
-                        {% endif %}
-                    <span class="card__name">{{ pokemon.name | capitalize }}</span>
-                    <img
-                        src="{{ pokemon.image }}"
-                        alt="{{ pokemon.name | capitalize }}"
-                        class="card__image"
-                        loading="lazy"
-                    />
-                    </a>
-                </li>
-                {% endfor %}
-            </ul>
-        </main>
+
+            <main id="main-content">
+                
+                <h1>{% if isCaughtPage %}Caught Pokémon{% else %}All Pokémon{% endif %}</h1>
+
+                {% if error %}
+                    <p class="error">{{ error }}</p>
+                {% endif %}
+
+                <ul class="pokemon-list">
+                    {% for pokemon in pokemonList %}
+                    <li class="pokemon-list__item">
+                        <a href="/pokemon/{{ pokemon.id }}" class="card type-{{ pokemon.types[0] }}">
+                            {% if pokemon.isCaught %}
+                                <img src="/assets/pokeball.svg" alt="Caught" class="card__pokeball" />
+                            {% endif %}
+                        <span class="card__name">{{ pokemon.name | capitalize }}</span>
+                        <img
+                            src="{{ pokemon.image }}"
+                            alt="{{ pokemon.name | capitalize }}"
+                            class="card__image"
+                            loading="lazy"
+                        />
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </main>
+        </div>    
 
     </body>
 </html>
