@@ -536,6 +536,20 @@ article {
   margin-bottom: 12px;
 }
 
+.not-found {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.not-found img {
+  max-width: 730px;
+  width: 100%;
+  height: auto;
+}
+
 /* Type kleuren */
 .type-grass    { background: var(--type-grass); }
 .type-fire     { background: var(--type-fire); }
